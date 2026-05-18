@@ -57,26 +57,38 @@
             text-shadow: 3px 3px 0 #b13e1c;
         }
 
-        /* Botão de acessibilidade flutuante */
-        .accessibility-btn {
+        /* Botões de acessibilidade flutuantes */
+        .accessibility-buttons {
             position: fixed;
             bottom: 20px;
             right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .access-btn {
             background: #1f3e4b;
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 12px 20px;
+            padding: 10px 18px;
             font-weight: bold;
             cursor: pointer;
-            z-index: 1000;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             transition: 0.2s;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
         }
-        .accessibility-btn:hover {
+        .access-btn:hover {
             background: #ff8c42;
             transform: scale(1.05);
+        }
+        .stop-btn {
+            background: #9e2d2d;
+        }
+        .stop-btn:hover {
+            background: #c0392b;
         }
 
         .container {
@@ -250,6 +262,11 @@
             border-top-left-radius: 3rem;
             border-top-right-radius: 3rem;
         }
+        .footer .teachers {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #ffd9a5;
+        }
 
         .modal {
             display: none;
@@ -297,10 +314,14 @@
     <div><i class="fas fa-universal-access"></i> Detecção de pedestres · Sinalização sonora · Código aberto</div>
 </div>
 
-<button class="accessibility-btn" id="globalReadBtn"><i class="fas fa-volume-up"></i> 🔈 Ler resumo da exposição</button>
+<!-- Botões flutuantes de acessibilidade -->
+<div class="accessibility-buttons">
+    <button class="access-btn" id="globalReadBtn"><i class="fas fa-volume-up"></i> 🔈 Ler resumo da exposição</button>
+    <button class="access-btn stop-btn" id="stopSpeechBtn"><i class="fas fa-stop-circle"></i> ⏹️ Parar Som</button>
+</div>
 
 <div class="container">
-    <!-- GALERIA COM IMAGENS -->
+    <!-- GALERIA COM IMAGENS (nomes corrigidos: imag4.png e imag6.png) -->
     <div class="gallery-header">
         <div class="section-title"><i class="fas fa-images"></i> Processo de construção – Clique no ícone de áudio para ouvir</div>
         <span style="background: #ffe2b3; padding: 0.3rem 1rem; border-radius: 30px;"><i class="fas fa-universal-access"></i> Exposição acessível</span>
@@ -392,14 +413,6 @@ void loop() {
         </div>
         <div class="status-audio" id="audioStatus">🔊 Aguardando ação...</div>
     </div>
-
-    <!-- Âncora e reflexão final -->
-    <div style="background: #FFEBD6; border-radius: 2rem; padding: 1.5rem; margin: 2rem 0; border-left: 12px solid #f97e2e;">
-        <i class="fas fa-play-circle" style="font-size: 2rem; color: #e56e1a;"></i> 
-        <strong>Âncora do projeto:</strong> Vídeo "Basquete em cadeira de rodas – superação e inclusão"<br>
-        <strong>Questão motriz:</strong> “Como a ciência, tecnologia e IA contribuem para a melhoria da mobilidade?”<br>
-        O <strong>Semáforo com IR</strong> é a resposta inovadora da Turma 2º Ano D, conectando eletrônica, programação e acessibilidade. Além disso, a turma realizou uma vivência com um aluno vendado para simular a experiência de uma pessoa cega, compreendendo na prática a importância da sinalização sonora.
-    </div>
 </div>
 
 <!-- MODAIS DAS DISCIPLINAS -->
@@ -436,22 +449,48 @@ void loop() {
     <i class="fas fa-chalkboard-user"></i> Exposição Virtual Acessível – Turma 2º Ano D | Projeto Integrador: Inteligência Artificial e Tecnologias<br>
     Secretaria de Estado da Educação do Paraná | Metodologia ABP<br>
     🚦 Inovação, inclusão e tecnologia assistiva.
+    <div class="teachers">Professores: Patrícia Ferro, Renan Borego e Lainy Grande</div>
 </div>
 
 <script>
-    // ======================= FUNÇÃO DE LEITURA POR VOZ (ACESSIBILIDADE PARA CEGOS) =======================
+    // ======================= SÍNTESE DE VOZ E BOTÃO PARAR =======================
     let synth = window.speechSynthesis;
+    let currentUtterance = null;
+
     function speakText(text) {
         if (!synth) {
             alert("Seu navegador não suporta síntese de voz.");
             return;
         }
-        synth.cancel(); // interrompe qualquer fala anterior
+        // Para qualquer fala em andamento antes de iniciar nova
+        if (synth.speaking || synth.pending) {
+            synth.cancel();
+        }
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'pt-BR';
         utterance.rate = 0.9;
+        currentUtterance = utterance;
         synth.speak(utterance);
     }
+
+    function stopSpeaking() {
+        if (synth) {
+            synth.cancel();
+            currentUtterance = null;
+            // Atualizar status do simulador se necessário
+            const statusSpan = document.getElementById('audioStatus');
+            if (statusSpan) statusSpan.innerHTML = '⏹️ Leitura interrompida.';
+            setTimeout(() => {
+                if (statusSpan && statusSpan.innerHTML === '⏹️ Leitura interrompida.') 
+                    statusSpan.innerHTML = '🔊 Áudio parado. Clique em "Detectar pedestre" para novo ciclo.';
+            }, 1500);
+        }
+    }
+
+    // Botão global de parar som
+    document.getElementById('stopSpeechBtn').addEventListener('click', () => {
+        stopSpeaking();
+    });
 
     // Ler resumo global da exposição
     document.getElementById('globalReadBtn').addEventListener('click', () => {
@@ -468,14 +507,14 @@ void loop() {
         speakText("Destaque do projeto: " + texto);
     });
 
-    // ======================= GALERIA COM IMAGENS E BOTÕES DE LEITURA =======================
+    // ======================= GALERIA COM IMAGENS (nomes finais: imag1.jpeg, imag2.jpeg, imag3.jpeg, imag4.png, IMAG5.png, imag6.png) =======================
     const imagens = [
         { src: "imag1.jpeg", title: "Conceito 1 – Esquema elétrico", desc: "Primeiras conexões do sensor IR, LEDs e Arduino. Protoboard e jumpers iniciais." },
         { src: "imag2.jpeg", title: "Conceito 2 – Montagem inicial", desc: "Ajustes no circuito, posicionamento dos componentes e organização das ligações." },
         { src: "imag3.jpeg", title: "Conceito 3 – Sensor IR + LEDs", desc: "Testes de detecção de pedestres e lógica de funcionamento com LEDs." },
-        { src: "imag6.jpeg", title: "Vivência de acessibilidade", desc: "Aluno vendado vivenciando a experiência de uma pessoa cega – compreensão empática da necessidade de sinalização sonora." },
+        { src: "imag6.png", title: "Vivência de acessibilidade", desc: "Aluno vendado vivenciando a experiência de uma pessoa cega – compreensão empática da necessidade de sinalização sonora." },
         { src: "IMAG5.png", title: "Alunos programando", desc: "Equipe 2º D codificando no Arduino IDE com apoio de IA e revisão de código." },
-        { src: "imag4.jpeg", title: "Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível – montado, explicado e discutido em sala de aula." }
+        { src: "imag4.png", title: "Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível – montado, explicado e discutido em sala de aula." }
     ];
 
     const galleryGrid = document.getElementById('galleryGrid');
@@ -524,7 +563,6 @@ void loop() {
         modalImg.src = src;
         modalTitle.innerText = title;
         currentModalTitle = title;
-        // encontra a descrição correspondente
         const found = imagens.find(i => i.title === title);
         currentModalDesc = found ? found.desc : "";
         imageModal.style.display = 'flex';
@@ -534,6 +572,7 @@ void loop() {
     document.getElementById('closeImageModalBtn')?.addEventListener('click', () => {
         imageModal.style.display = 'none';
         document.body.style.overflow = 'auto';
+        stopSpeaking();
     });
     document.getElementById('readModalBtn')?.addEventListener('click', () => {
         speakText(`${currentModalTitle}. ${currentModalDesc}`);
@@ -542,10 +581,12 @@ void loop() {
         if (e.target === imageModal) {
             imageModal.style.display = 'none';
             document.body.style.overflow = 'auto';
+            stopSpeaking();
         }
         if (e.target.classList && e.target.classList.contains('modal')) {
             e.target.style.display = 'none';
             document.body.style.overflow = 'auto';
+            stopSpeaking();
         }
     }
 
@@ -556,15 +597,17 @@ void loop() {
     function closeModal(id) {
         document.getElementById(id).style.display = 'none';
         document.body.style.overflow = 'auto';
+        stopSpeaking();
     }
     window.closeModal = closeModal;
 
-    // ======================= SIMULADOR COM ÁUDIO =======================
+    // ======================= SIMULADOR COM ÁUDIO (compatível com botão parar) =======================
     const ledRed = document.getElementById('ledRed');
     const ledYellow = document.getElementById('ledYellow');
     const ledGreen = document.getElementById('ledGreen');
     const audioStatusSpan = document.getElementById('audioStatus');
     let isSimulating = false;
+    let simulationTimeout = null;
 
     function resetSemaforo(keepGreen = true) {
         ledRed.classList.remove('active');
@@ -573,7 +616,7 @@ void loop() {
         if (keepGreen) ledGreen.classList.add('active');
     }
 
-    async function delay(ms) {
+    function delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
@@ -589,10 +632,12 @@ void loop() {
         
         speakText("Pedestre detectado. Atenção, mudança de sinal.");
         await delay(1200);
+        if (!isSimulating) return;
         
         for(let i=1; i<=3; i++) {
             speakText(`Alerta ${i}`);
             await delay(500);
+            if (!isSimulating) return;
         }
         
         // Amarelo: alerta
@@ -601,6 +646,7 @@ void loop() {
         speakText("Amarelo: Alerta");
         audioStatusSpan.innerHTML = '🟡 Amarelo: alerta';
         await delay(2000);
+        if (!isSimulating) return;
         
         // Vermelho: Pare
         ledYellow.classList.remove('active');
@@ -608,6 +654,7 @@ void loop() {
         speakText("Vermelho: Pare");
         audioStatusSpan.innerHTML = '🔴 Vermelho: PARE - travessia segura';
         await delay(4500);
+        if (!isSimulating) return;
         
         // Verde: Passa
         ledRed.classList.remove('active');
@@ -621,7 +668,19 @@ void loop() {
     }
 
     document.getElementById('simularBtn').addEventListener('click', () => {
-        simulatePedestrianWithAudio();
+        if (isSimulating) {
+            stopSpeaking();
+            // Se quiser interromper também o ciclo, podemos forçar reset
+            isSimulating = false;
+            resetSemaforo(true);
+            audioStatusSpan.innerHTML = '🔄 Ciclo interrompido pelo usuário.';
+            setTimeout(() => {
+                if (audioStatusSpan.innerHTML === '🔄 Ciclo interrompido pelo usuário.') 
+                    audioStatusSpan.innerHTML = '✅ Semáforo reiniciado. Clique para novo ciclo.';
+            }, 1500);
+        } else {
+            simulatePedestrianWithAudio();
+        }
     });
 
     // Inicialização
@@ -632,7 +691,7 @@ void loop() {
         if(e.key === 'Escape') {
             document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
             document.body.style.overflow = 'auto';
-            if (synth) synth.cancel();
+            stopSpeaking();
         }
     });
 </script>
