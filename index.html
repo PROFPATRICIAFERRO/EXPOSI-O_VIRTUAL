@@ -1,3 +1,5 @@
+Aqui está o código completo da exposição virtual, com as correções nas legendas das imagens (diferenciando cada conceito) e a funcionalidade de áudio no simulador do semáforo: ao detectar pedestre, ele toca as falas "Vermelho: Pare", "Amarelo: Alerta", "Verde: Passa" em sincronia com o ciclo de LEDs.
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -58,14 +60,13 @@
             text-shadow: 3px 3px 0 #b13e1c;
         }
 
-        /* container principal */
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 1rem 2rem;
         }
 
-        /* GALERIA INTERATIVA EXPOSIÇÃO */
+        /* GALERIA INTERATIVA */
         .gallery-header {
             display: flex;
             justify-content: space-between;
@@ -120,10 +121,6 @@
             font-weight: 800;
             margin-bottom: 0.3rem;
         }
-        .modal-img {
-            max-width: 100%;
-            border-radius: 1rem;
-        }
 
         /* spotlight produto final */
         .spotlight {
@@ -174,7 +171,7 @@
             transition: 0.1s;
         }
 
-        /* simulador interativo */
+        /* simulador interativo com áudio */
         .interactive-semaforo {
             background: #2b2b2b;
             border-radius: 2rem;
@@ -185,6 +182,7 @@
             flex-wrap: wrap;
             margin: 2rem 0;
             color: white;
+            gap: 1rem;
         }
         .leds {
             display: flex;
@@ -210,6 +208,14 @@
             padding: 10px 20px;
             border-radius: 2rem;
             font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .status-audio {
+            background: #00000066;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
         }
 
         .footer {
@@ -222,7 +228,7 @@
             border-top-right-radius: 3rem;
         }
 
-        /* modal */
+        /* modais */
         .modal {
             display: none;
             position: fixed;
@@ -270,14 +276,12 @@
 </div>
 
 <div class="container">
-    <!-- GALERIA DAS 5 IMAGENS REAIS (imag1.jpeg ... IMAG5.png) -->
+    <!-- GALERIA DAS 5 IMAGENS REAIS (COM LEGENDAS CORRETAS) -->
     <div class="gallery-header">
         <div class="section-title"><i class="fas fa-images"></i> Processo de construção – Clique para ampliar</div>
         <span style="background: #ffe2b3; padding: 0.3rem 1rem; border-radius: 30px;"><i class="fas fa-hand-pointer"></i> Exposição interativa</span>
     </div>
-    <div class="expo-grid" id="galleryGrid">
-        <!-- as imagens serão inseridas via js com os nomes exatos, mas já estruturadas -->
-    </div>
+    <div class="expo-grid" id="galleryGrid"></div>
 
     <!-- PRODUTO FINAL - SEMÁFORO + CÓDIGO -->
     <div class="spotlight">
@@ -334,11 +338,11 @@ void loop() {
         <div class="area-card"><i class="fas fa-microchip fa-2x"></i> <h3>Robótica</h3> <p>Montagem do sensor IR, LEDs e buzzer; prototipagem e calibração. Tecnologia assistiva para cidades inclusivas.</p><button class="btn-detail" onclick="openModal('robotModal')">Circuito</button></div>
     </div>
 
-    <!-- SIMULADOR INTERATIVO DO SEMÁFORO (diversão + aprendizado) -->
+    <!-- SIMULADOR INTERATIVO COM ÁUDIO (VERMELHO PARE, AMARELO ALERTA, VERDE PASSA) -->
     <div class="interactive-semaforo">
         <div>
             <h3><i class="fas fa-gamepad"></i> Simule o Semáforo Inteligente</h3>
-            <p>Clique em "Detectar pedestre" e veja o ciclo acessível</p>
+            <p>Clique em "Detectar pedestre" e veja o ciclo acessível com comandos de voz!</p>
             <button class="simulate-btn" id="simularBtn"><i class="fas fa-person-walking"></i> Detectar pedestre (IR)</button>
         </div>
         <div class="leds">
@@ -346,7 +350,7 @@ void loop() {
             <div class="led yellow" id="ledYellow"></div>
             <div class="led green" id="ledGreen"></div>
         </div>
-        <div><i class="fas fa-volume-up"></i> <span id="somStatus">🔇 Aguardando...</span></div>
+        <div class="status-audio" id="audioStatus">🔊 Aguardando ação...</div>
     </div>
 
     <!-- Âncora e reflexão final -->
@@ -358,7 +362,7 @@ void loop() {
     </div>
 </div>
 
-<!-- MODAIS -->
+<!-- MODAIS DAS DISCIPLINAS -->
 <div id="fisicaModal" class="modal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal('fisicaModal')">&times;</span>
@@ -392,13 +396,13 @@ void loop() {
 </div>
 
 <script>
-    // Nomes exatos das imagens fornecidas
+    // ======================= GALERIA COM IMAGENS E LEGENDAS CORRETAS =======================
     const imagens = [
-        { src: "imag1.jpeg", title: "🔧 Conceito 1 – Esquema elétrico", desc: "Primeiras conexões do sensor IR, LEDs e Arduino." },
-        { src: "imag2.jpeg", title: "🔌 Conceito 2 – Montagem inicial", desc: "Protoboard, jumpers e ajustes do circuito." },
-        { src: "imag3.jpeg", title: "📡 Conceito 3 – Sensor IR + LEDs", desc: "Testes de detecção e lógica de pedestre." },
-        { src: "imag4.png", title: "👩‍💻 Alunos programando", desc: "Equipe 2º D codificando no Arduino IDE com apoio de IA." },
-        { src: "IMAG5.png", title: "✅ Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível." }
+        { src: "imag1.jpeg", title: "🔧 Conceito 1 – Esquema elétrico", desc: "Primeiras conexões do sensor IR, LEDs e Arduino. Protoboard e jumpers iniciais." },
+        { src: "imag2.jpeg", title: "🔌 Conceito 2 – Montagem inicial", desc: "Ajustes no circuito, posicionamento dos componentes e organização das ligações." },
+        { src: "imag3.jpeg", title: "📡 Conceito 3 – Sensor IR + LEDs", desc: "Testes de detecção de pedestres e lógica de funcionamento com LEDs." },
+        { src: "imag4.png", title: "👩‍💻 Alunos programando", desc: "Equipe 2º D codificando no Arduino IDE com apoio de IA e revisão de código." },
+        { src: "IMAG5.png", title: "✅ Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível – pronto para a Feira de Ciências." }
     ];
 
     const galleryGrid = document.getElementById('galleryGrid');
@@ -420,7 +424,7 @@ void loop() {
         });
     }
 
-    // Modal de imagem ampliada
+    // Modal de ampliação de imagem
     const imageModal = document.createElement('div');
     imageModal.className = 'modal';
     imageModal.id = 'imageModal';
@@ -439,7 +443,6 @@ void loop() {
         modalTitle.innerText = title;
         imageModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-        // se a imagem falhar, manter placeholder apenas visual
         modalImg.onerror = () => { modalImg.src = 'https://placehold.co/600x400?text=Imagem+carregamento'; };
     }
     document.getElementById('closeImageModalBtn')?.addEventListener('click', () => {
@@ -457,7 +460,7 @@ void loop() {
         }
     }
 
-    // Funções modais dos cards disciplinares
+    // Funções modais de conteúdo
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
         document.body.style.overflow = 'hidden';
@@ -466,13 +469,28 @@ void loop() {
         document.getElementById(id).style.display = 'none';
         document.body.style.overflow = 'auto';
     }
+    window.closeModal = closeModal;
 
-    // --- SIMULADOR INTERATIVO SEMÁFORO ---
+    // ======================= SIMULADOR COM ÁUDIO (Vermelho: Pare, Amarelo: Alerta, Verde: Passa) =======================
     const ledRed = document.getElementById('ledRed');
     const ledYellow = document.getElementById('ledYellow');
     const ledGreen = document.getElementById('ledGreen');
-    const somSpan = document.getElementById('somStatus');
+    const audioStatusSpan = document.getElementById('audioStatus');
     let isSimulating = false;
+    let synth = window.speechSynthesis;
+
+    function speakText(text) {
+        if (!synth) return;
+        synth.cancel(); // interrompe qualquer fala anterior para não acumular
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.9;
+        synth.speak(utterance);
+        audioStatusSpan.innerHTML = `🔊 Falando: "${text}"`;
+        setTimeout(() => {
+            if (audioStatusSpan.innerHTML.includes(text)) audioStatusSpan.innerHTML = `✅ Áudio reproduzido: ${text}`;
+        }, 1000);
+    }
 
     function resetSemaforo(keepGreen = true) {
         ledRed.classList.remove('active');
@@ -481,59 +499,74 @@ void loop() {
         if (keepGreen) ledGreen.classList.add('active');
     }
 
-    async function simulatePedestrian() {
-        if (isSimulating) return;
-        isSimulating = true;
-        // estado inicial verde
-        resetSemaforo(true);
-        somSpan.innerHTML = '🔊 Alerta: pedestre detectado!';
-        // bip bip bip
-        for(let i=0;i<3;i++) {
-            somSpan.innerHTML = `⚠️ BIP ${i+1} ⚠️`;
-            await delay(300);
-            somSpan.innerHTML = `🔊 Alerta sonoro`;
-            await delay(200);
-        }
-        // amarelo
-        resetSemaforo(false);
-        ledYellow.classList.add('active');
-        somSpan.innerHTML = '🟡 Atenção: sinal amarelo';
-        await delay(1800);
-        // vermelho + som contínuo
-        ledYellow.classList.remove('active');
-        ledRed.classList.add('active');
-        somSpan.innerHTML = '🔴 Sinal vermelho – travessia liberada (som contínuo)';
-        await delay(4000);
-        // fim travessia, volta verde
-        ledRed.classList.remove('active');
-        ledGreen.classList.add('active');
-        somSpan.innerHTML = '🟢 Sinal verde – aguarde próximo pedestre';
-        await delay(500);
-        isSimulating = false;
-        somSpan.innerHTML = '✅ Semáforo pronto. Pressione "Detectar pedestre" novamente';
+    async function delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+    async function simulatePedestrianWithAudio() {
+        if (isSimulating) {
+            audioStatusSpan.innerHTML = '⏳ Ciclo já em andamento, aguarde...';
+            return;
+        }
+        isSimulating = true;
+        // Início: sinal verde inicial
+        resetSemaforo(true);
+        audioStatusSpan.innerHTML = '🟢 Semáforo verde. Aguardando pedestre...';
+        
+        // Simula detecção do pedestre: primeiro alerta sonoro (texto)
+        speakText("Pedestre detectado. Atenção, mudança de sinal.");
+        await delay(1200);
+        
+        // Transição: 3 bips sonoros simulados (texto)
+        for(let i=1; i<=3; i++) {
+            speakText(`Alerta ${i}`);
+            await delay(500);
+        }
+        
+        // Amarelo: alerta
+        resetSemaforo(false);
+        ledYellow.classList.add('active');
+        speakText("Amarelo: alerta. Prepare-se para parar.");
+        audioStatusSpan.innerHTML = '🟡 Amarelo: alerta';
+        await delay(2000);
+        
+        // Vermelho: PARE
+        ledYellow.classList.remove('active');
+        ledRed.classList.add('active');
+        speakText("Vermelho: Pare. Travessia liberada para pedestres.");
+        audioStatusSpan.innerHTML = '🔴 Vermelho: PARE - travessia segura';
+        await delay(4500);
+        
+        // Retorno ao verde
+        ledRed.classList.remove('active');
+        ledGreen.classList.add('active');
+        speakText("Verde: Passa. Sinal liberado para veículos.");
+        audioStatusSpan.innerHTML = '🟢 Verde: Passa. Fim do ciclo.';
+        await delay(1000);
+        
+        isSimulating = false;
+        audioStatusSpan.innerHTML = '✅ Semáforo pronto. Clique em "Detectar pedestre" novamente.';
+    }
 
     document.getElementById('simularBtn').addEventListener('click', () => {
-        if(!isSimulating) simulatePedestrian();
-        else somSpan.innerHTML = '⏳ Já existe um ciclo em andamento...';
+        simulatePedestrianWithAudio();
     });
 
-    // inicializa galeria com imagens
+    // Inicialização: estado verde
+    resetSemaforo(true);
+    // Garantir que a síntese de voz funcione apenas após interação do usuário (alguns navegadores exigem)
+    // O primeiro clique no botão já ativa o áudio permitido pela política do usuário.
+    
     buildGallery();
-
-    // Fechar modais globais com ESC
+    // Fechar modais com tecla ESC
     document.addEventListener('keydown', (e) => {
         if(e.key === 'Escape') {
             document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
             document.body.style.overflow = 'auto';
+            if (synth) synth.cancel();
         }
     });
-
-    // Inicializar semáforo com verde
-    resetSemaforo(true);
-    somSpan.innerHTML = '🟢 Simulação pronta. Clique em "Detectar pedestre"';
 </script>
 </body>
 </html>
+```
