@@ -1,11 +1,9 @@
-Aqui está o código completo da exposição virtual, com as correções nas legendas das imagens (diferenciando cada conceito) e a funcionalidade de áudio no simulador do semáforo: ao detectar pedestre, ele toca as falas "Vermelho: Pare", "Amarelo: Alerta", "Verde: Passa" em sincronia com o ciclo de LEDs.
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>✨ EXPOSIÇÃO VIRTUAL | 2º Ano D - Semáforo Inteligente IR ✨</title>
+    <title>✨ EXPOSIÇÃO VIRTUAL ACESSÍVEL | 2º Ano D - Semáforo Inteligente IR ✨</title>
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -23,7 +21,6 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             overflow-x: hidden;
         }
 
-        /* cabeçalho com vibe de evento */
         .hero {
             background: linear-gradient(125deg, #F45B3A, #FF8C42, #F9A03F);
             color: white;
@@ -60,13 +57,34 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             text-shadow: 3px 3px 0 #b13e1c;
         }
 
+        /* Botão de acessibilidade flutuante */
+        .accessibility-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f3e4b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        .accessibility-btn:hover {
+            background: #ff8c42;
+            transform: scale(1.05);
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 1rem 2rem;
         }
 
-        /* GALERIA INTERATIVA */
         .gallery-header {
             display: flex;
             justify-content: space-between;
@@ -97,8 +115,8 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             overflow: hidden;
             transition: all 0.3s cubic-bezier(0.2, 0.9, 0.5, 1.1);
             box-shadow: 0 18px 28px -12px rgba(0,0,0,0.2);
-            cursor: pointer;
             border: 1px solid rgba(255,200,120,0.6);
+            position: relative;
         }
         .expo-card:hover {
             transform: translateY(-10px) scale(1.02);
@@ -111,7 +129,6 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             object-fit: cover;
             display: block;
             background: #f0cfaa;
-            transition: 0.2s;
         }
         .card-info {
             padding: 1.2rem;
@@ -121,8 +138,18 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             font-weight: 800;
             margin-bottom: 0.3rem;
         }
+        .read-btn {
+            background: #ff8233;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 12px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+        }
 
-        /* spotlight produto final */
         .spotlight {
             background: linear-gradient(125deg, #1f3e4b, #2d6a8f);
             border-radius: 2.8rem;
@@ -143,7 +170,6 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             border-left: 6px solid #ffbc6e;
         }
 
-        /* cards das áreas */
         .area-container {
             display: flex;
             flex-wrap: wrap;
@@ -168,10 +194,8 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             font-weight: bold;
             margin-top: 1rem;
             cursor: pointer;
-            transition: 0.1s;
         }
 
-        /* simulador interativo com áudio */
         .interactive-semaforo {
             background: #2b2b2b;
             border-radius: 2rem;
@@ -196,7 +220,6 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             height: 55px;
             border-radius: 50%;
             background: gray;
-            box-shadow: 0 0 5px rgba(0,0,0,0.3);
             transition: 0.2s;
         }
         .led.red.active { background: #ff3b3b; box-shadow: 0 0 20px red; }
@@ -228,7 +251,6 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
             border-top-right-radius: 3rem;
         }
 
-        /* modais */
         .modal {
             display: none;
             position: fixed;
@@ -272,14 +294,16 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
     <div class="turma-badge"><i class="fas fa-users"></i> 2º ANO D - PROJETO INTEGRADOR <i class="fas fa-microchip"></i></div>
     <h1>🚦 SEMÁFORO INTELIGENTE COM IR 🚦</h1>
     <p><strong>➕ Acessibilidade Visual e Auditiva | Tecnologia Assistiva</strong><br>“Ciência, tecnologia e IA transformando a mobilidade urbana”</p>
-    <div style="margin-top: 0.8rem;"><i class="fas fa-universal-access"></i> Detecção de pedestres · Sinalização sonora · Código aberto</div>
+    <div><i class="fas fa-universal-access"></i> Detecção de pedestres · Sinalização sonora · Código aberto</div>
 </div>
 
+<button class="accessibility-btn" id="globalReadBtn"><i class="fas fa-volume-up"></i> 🔈 Ler resumo da exposição</button>
+
 <div class="container">
-    <!-- GALERIA DAS 5 IMAGENS REAIS (COM LEGENDAS CORRETAS) -->
+    <!-- GALERIA COM IMAGENS -->
     <div class="gallery-header">
-        <div class="section-title"><i class="fas fa-images"></i> Processo de construção – Clique para ampliar</div>
-        <span style="background: #ffe2b3; padding: 0.3rem 1rem; border-radius: 30px;"><i class="fas fa-hand-pointer"></i> Exposição interativa</span>
+        <div class="section-title"><i class="fas fa-images"></i> Processo de construção – Clique no ícone de áudio para ouvir</div>
+        <span style="background: #ffe2b3; padding: 0.3rem 1rem; border-radius: 30px;"><i class="fas fa-universal-access"></i> Exposição acessível</span>
     </div>
     <div class="expo-grid" id="galleryGrid"></div>
 
@@ -288,8 +312,9 @@ Aqui está o código completo da exposição virtual, com as correções nas leg
         <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
             <i class="fas fa-microchip" style="font-size: 2.8rem;"></i>
             <h2 style="font-size: 2rem;">⭐ Protótipo Final: Semáforo com IR e Buzzer ⭐</h2>
+            <button class="read-btn" id="readSpotlightBtn"><i class="fas fa-ear-listen"></i> Ouvir descrição</button>
         </div>
-        <p>Circuito inteligente desenvolvido pela turma que detecta pedestres por sensor infravermelho, aciona alerta sonoro e sincroniza LEDs para travessia segura, garantindo acessibilidade para pessoas com deficiência visual e baixa visão.</p>
+        <p id="spotlightText">Circuito inteligente desenvolvido pela turma que detecta pedestres por sensor infravermelho, aciona alerta sonoro e sincroniza LEDs para travessia segura, garantindo acessibilidade para pessoas com deficiência visual e baixa visão. O projeto foi montado, explicado e discutido em sala de aula, promovendo empatia e inclusão.</p>
         <div class="code-block">
             <i class="fas fa-code"></i> <strong>Código Arduino – Semáforo Acessível 2º D</strong>
             <pre>
@@ -306,11 +331,11 @@ void setup() {
   pinMode(verde, OUTPUT);
   pinMode(sensorIR, INPUT);
   pinMode(buzzer, OUTPUT);
-  digitalWrite(verde, HIGH); // sinal inicial verde
+  digitalWrite(verde, HIGH);
 }
 
 void loop() {
-  if(digitalRead(sensorIR) == HIGH) {   // pedestre detectado
+  if(digitalRead(sensorIR) == HIGH) {
     for(int i=0;i<3;i++) { tone(buzzer,1000); delay(200); noTone(buzzer); delay(150); }
     digitalWrite(verde, LOW);
     digitalWrite(amarelo, HIGH);
@@ -318,7 +343,7 @@ void loop() {
     digitalWrite(amarelo, LOW);
     digitalWrite(vermelho, HIGH);
     tone(buzzer, 1500);
-    delay(5000);   // tempo de travessia
+    delay(5000);
     noTone(buzzer);
     digitalWrite(vermelho, LOW);
     digitalWrite(verde, HIGH);
@@ -333,12 +358,27 @@ void loop() {
     <!-- ÁREAS DO CONHECIMENTO -->
     <div class="section-title"><i class="fas fa-flask"></i> Integração interdisciplinar</div>
     <div class="area-container">
-        <div class="area-card"><i class="fas fa-atom fa-2x"></i> <h3>Física</h3> <p>Movimento, velocidade média, estudo de rampas acessíveis e máquinas simples (alavancas) aplicadas ao esporte paralímpico.</p><button class="btn-detail" onclick="openModal('fisicaModal')">Explorar</button></div>
-        <div class="area-card"><i class="fas fa-laptop-code fa-2x"></i> <h3>Programação & IA</h3> <p>Lógica do semáforo, engenharia de prompt para gerar código otimizado, análise de dados de mobilidade com Google Planilhas.</p><button class="btn-detail" onclick="openModal('progModal')">Ver + IA</button></div>
-        <div class="area-card"><i class="fas fa-microchip fa-2x"></i> <h3>Robótica</h3> <p>Montagem do sensor IR, LEDs e buzzer; prototipagem e calibração. Tecnologia assistiva para cidades inclusivas.</p><button class="btn-detail" onclick="openModal('robotModal')">Circuito</button></div>
+        <div class="area-card">
+            <i class="fas fa-atom fa-2x"></i> <h3>Física</h3>
+            <p id="fisicaText">Movimento, velocidade média, estudo de rampas acessíveis e máquinas simples (alavancas) aplicadas ao esporte paralímpico.</p>
+            <button class="btn-detail" onclick="openModal('fisicaModal')">Explorar</button>
+            <button class="read-btn" onclick="speakText('Física: ' + document.getElementById('fisicaText').innerText)">🔊 Ler</button>
+        </div>
+        <div class="area-card">
+            <i class="fas fa-laptop-code fa-2x"></i> <h3>Programação & IA</h3>
+            <p id="progText">Lógica do semáforo, engenharia de prompt para gerar código otimizado, análise de dados de mobilidade com Google Planilhas.</p>
+            <button class="btn-detail" onclick="openModal('progModal')">Ver + IA</button>
+            <button class="read-btn" onclick="speakText('Programação e IA: ' + document.getElementById('progText').innerText)">🔊 Ler</button>
+        </div>
+        <div class="area-card">
+            <i class="fas fa-microchip fa-2x"></i> <h3>Robótica</h3>
+            <p id="robotText">Montagem do sensor IR, LEDs e buzzer; prototipagem e calibração. Tecnologia assistiva para cidades inclusivas.</p>
+            <button class="btn-detail" onclick="openModal('robotModal')">Circuito</button>
+            <button class="read-btn" onclick="speakText('Robótica: ' + document.getElementById('robotText').innerText)">🔊 Ler</button>
+        </div>
     </div>
 
-    <!-- SIMULADOR INTERATIVO COM ÁUDIO (VERMELHO PARE, AMARELO ALERTA, VERDE PASSA) -->
+    <!-- SIMULADOR INTERATIVO COM ÁUDIO -->
     <div class="interactive-semaforo">
         <div>
             <h3><i class="fas fa-gamepad"></i> Simule o Semáforo Inteligente</h3>
@@ -358,7 +398,7 @@ void loop() {
         <i class="fas fa-play-circle" style="font-size: 2rem; color: #e56e1a;"></i> 
         <strong>Âncora do projeto:</strong> Vídeo "Basquete em cadeira de rodas – superação e inclusão"<br>
         <strong>Questão motriz:</strong> “Como a ciência, tecnologia e IA contribuem para a melhoria da mobilidade?”<br>
-        O <strong>Semáforo com IR</strong> é a resposta inovadora da Turma 2º Ano D, conectando eletrônica, programação e acessibilidade.
+        O <strong>Semáforo com IR</strong> é a resposta inovadora da Turma 2º Ano D, conectando eletrônica, programação e acessibilidade. Além disso, a turma realizou uma vivência com um aluno vendado para simular a experiência de uma pessoa cega, compreendendo na prática a importância da sinalização sonora.
     </div>
 </div>
 
@@ -369,6 +409,7 @@ void loop() {
         <h3><i class="fas fa-atom"></i> Física em ação</h3>
         <ul><li>Análise de tempos de travessia para pedestres e cadeirantes.</li><li>Máquinas simples no basquete paralímpico: alavancas.</li><li>Reflexão da luz infravermelha – princípio do sensor.</li></ul>
         <p><strong>Experimentação:</strong> simulação de rampas e cálculo de velocidade média no trajeto escolar.</p>
+        <button class="read-btn" onclick="speakText('Modal de Física: análise de tempos de travessia, máquinas simples e reflexão infravermelha.')">🔊 Ler conteúdo</button>
     </div>
 </div>
 <div id="progModal" class="modal">
@@ -377,6 +418,7 @@ void loop() {
         <h3><i class="fas fa-code"></i> Programação + IA</h3>
         <ul><li>Código colaborativo no Arduino IDE.</li><li>Uso de IA generativa (Gemini) para revisar e comentar o sistema.</li><li>Dashboard de dados sobre acessibilidade nas calçadas.</li></ul>
         <p><strong>Engenharia de prompt:</strong> estudantes criaram prompts para otimizar temporização e gerar versões alternativas.</p>
+        <button class="read-btn" onclick="speakText('Modal de Programação: código colaborativo, uso de IA generativa e análise de dados de acessibilidade.')">🔊 Ler conteúdo</button>
     </div>
 </div>
 <div id="robotModal" class="modal">
@@ -385,24 +427,55 @@ void loop() {
         <h3><i class="fas fa-microchip"></i> Robótica – Esquema elétrico</h3>
         <p><strong>Componentes:</strong> Arduino UNO, sensor IR FC-51, LEDs (V/Az/Am), resistor 220Ω, buzzer, protoboard.</p>
         <p><strong>Conexões:</strong> Sensor IR no pino 7, LED verde pino 8, amarelo pino 9, vermelho pino 10, buzzer pino 6. GND comum.</p>
-        <p>Os alunos documentaram cada etapa da montagem nas imagens 1,2,3,4 e 5.</p>
+        <p>Os alunos documentaram cada etapa da montagem com as imagens da galeria, incluindo a vivência de acessibilidade com aluno vendado.</p>
+        <button class="read-btn" onclick="speakText('Modal de Robótica: componentes e conexões do semáforo inteligente com sensor infravermelho.')">🔊 Ler conteúdo</button>
     </div>
 </div>
 
 <div class="footer">
-    <i class="fas fa-chalkboard-user"></i> Exposição Virtual – Turma 2º Ano D | Projeto Integrador: Inteligência Artificial e Tecnologias<br>
-    Secretaria de Estado da Educação do Paraná | Metodologia ABP (Aprendizagem Baseada em Projetos)<br>
-    🚦 Inovação, inclusão e tecnologia assistiva pela mobilidade urbana.
+    <i class="fas fa-chalkboard-user"></i> Exposição Virtual Acessível – Turma 2º Ano D | Projeto Integrador: Inteligência Artificial e Tecnologias<br>
+    Secretaria de Estado da Educação do Paraná | Metodologia ABP<br>
+    🚦 Inovação, inclusão e tecnologia assistiva.
 </div>
 
 <script>
-    // ======================= GALERIA COM IMAGENS E LEGENDAS CORRETAS =======================
+    // ======================= FUNÇÃO DE LEITURA POR VOZ (ACESSIBILIDADE PARA CEGOS) =======================
+    let synth = window.speechSynthesis;
+    function speakText(text) {
+        if (!synth) {
+            alert("Seu navegador não suporta síntese de voz.");
+            return;
+        }
+        synth.cancel(); // interrompe qualquer fala anterior
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'pt-BR';
+        utterance.rate = 0.9;
+        synth.speak(utterance);
+    }
+
+    // Ler resumo global da exposição
+    document.getElementById('globalReadBtn').addEventListener('click', () => {
+        const resumo = "Bem-vindo à exposição virtual do 2º Ano D. Projeto Semáforo Inteligente com sensor infravermelho. " +
+            "O projeto integra Física, Programação e Robótica para criar um semáforo acessível que detecta pedestres e emite sinais sonoros, " +
+            "auxiliando pessoas com deficiência visual. A turma realizou vivências com aluno vendado, construiu protótipos e apresentou na Feira de Ciências. " +
+            "A página contém imagens do processo, códigos Arduino e um simulador interativo. Use os botões de áudio para ouvir cada seção.";
+        speakText(resumo);
+    });
+
+    // Ler spotlight
+    document.getElementById('readSpotlightBtn').addEventListener('click', () => {
+        const texto = document.getElementById('spotlightText').innerText;
+        speakText("Destaque do projeto: " + texto);
+    });
+
+    // ======================= GALERIA COM IMAGENS E BOTÕES DE LEITURA =======================
     const imagens = [
-        { src: "imag1.jpeg", title: "🔧 Conceito 1 – Esquema elétrico", desc: "Primeiras conexões do sensor IR, LEDs e Arduino. Protoboard e jumpers iniciais." },
-        { src: "imag2.jpeg", title: "🔌 Conceito 2 – Montagem inicial", desc: "Ajustes no circuito, posicionamento dos componentes e organização das ligações." },
-        { src: "imag3.jpeg", title: "📡 Conceito 3 – Sensor IR + LEDs", desc: "Testes de detecção de pedestres e lógica de funcionamento com LEDs." },
-        { src: "imag4.png", title: "👩‍💻 Alunos programando", desc: "Equipe 2º D codificando no Arduino IDE com apoio de IA e revisão de código." },
-        { src: "IMAG5.png", title: "✅ Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível – pronto para a Feira de Ciências." }
+        { src: "imag1.jpeg", title: "Conceito 1 – Esquema elétrico", desc: "Primeiras conexões do sensor IR, LEDs e Arduino. Protoboard e jumpers iniciais." },
+        { src: "imag2.jpeg", title: "Conceito 2 – Montagem inicial", desc: "Ajustes no circuito, posicionamento dos componentes e organização das ligações." },
+        { src: "imag3.jpeg", title: "Conceito 3 – Sensor IR + LEDs", desc: "Testes de detecção de pedestres e lógica de funcionamento com LEDs." },
+        { src: "imag6.jpeg", title: "Vivência de acessibilidade", desc: "Aluno vendado vivenciando a experiência de uma pessoa cega – compreensão empática da necessidade de sinalização sonora." },
+        { src: "IMAG5.png", title: "Alunos programando", desc: "Equipe 2º D codificando no Arduino IDE com apoio de IA e revisão de código." },
+        { src: "imag4.jpeg", title: "Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível – montado, explicado e discutido em sala de aula." }
     ];
 
     const galleryGrid = document.getElementById('galleryGrid');
@@ -411,13 +484,18 @@ void loop() {
         imagens.forEach((img, idx) => {
             const card = document.createElement('div');
             card.className = 'expo-card';
-            card.onclick = () => openImageModal(img.src, img.title);
+            // ao clicar no card, abre modal e lê título e descrição
+            card.onclick = () => {
+                openImageModal(img.src, img.title);
+                speakText(`${img.title}. ${img.desc}`);
+            };
             card.innerHTML = `
                 <img class="img-frame" src="${img.src}" alt="${img.title}" onerror="this.src='https://placehold.co/400x300?text=Imagem+${idx+1}+(aguarde)'; this.style.background='#ffd6a5';">
                 <div class="card-info">
                     <h3>${img.title}</h3>
                     <p>${img.desc}</p>
-                    <small><i class="fas fa-search-plus"></i> Clique para ampliar</small>
+                    <button class="read-btn" onclick="event.stopPropagation(); speakText('${img.title}. ${img.desc}');"><i class="fas fa-volume-up"></i> Ouvir descrição</button>
+                    <small><i class="fas fa-search-plus"></i> Clique na imagem para ampliar</small>
                 </div>
             `;
             galleryGrid.appendChild(card);
@@ -433,14 +511,22 @@ void loop() {
             <span class="close-modal" id="closeImageModalBtn">&times;</span>
             <img id="modalImagePreview" style="width:100%; border-radius:1rem;" src="">
             <h3 id="modalImageTitle" style="margin-top:0.8rem;"></h3>
+            <button class="read-btn" id="readModalBtn" style="margin-top:10px;">🔊 Ler descrição da imagem</button>
         </div>
     `;
     document.body.appendChild(imageModal);
+    
+    let currentModalTitle = "";
+    let currentModalDesc = "";
     function openImageModal(src, title) {
         const modalImg = document.getElementById('modalImagePreview');
         const modalTitle = document.getElementById('modalImageTitle');
         modalImg.src = src;
         modalTitle.innerText = title;
+        currentModalTitle = title;
+        // encontra a descrição correspondente
+        const found = imagens.find(i => i.title === title);
+        currentModalDesc = found ? found.desc : "";
         imageModal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
         modalImg.onerror = () => { modalImg.src = 'https://placehold.co/600x400?text=Imagem+carregamento'; };
@@ -448,6 +534,9 @@ void loop() {
     document.getElementById('closeImageModalBtn')?.addEventListener('click', () => {
         imageModal.style.display = 'none';
         document.body.style.overflow = 'auto';
+    });
+    document.getElementById('readModalBtn')?.addEventListener('click', () => {
+        speakText(`${currentModalTitle}. ${currentModalDesc}`);
     });
     window.onclick = function(e) {
         if (e.target === imageModal) {
@@ -460,7 +549,6 @@ void loop() {
         }
     }
 
-    // Funções modais de conteúdo
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
         document.body.style.overflow = 'hidden';
@@ -471,26 +559,12 @@ void loop() {
     }
     window.closeModal = closeModal;
 
-    // ======================= SIMULADOR COM ÁUDIO (Vermelho: Pare, Amarelo: Alerta, Verde: Passa) =======================
+    // ======================= SIMULADOR COM ÁUDIO =======================
     const ledRed = document.getElementById('ledRed');
     const ledYellow = document.getElementById('ledYellow');
     const ledGreen = document.getElementById('ledGreen');
     const audioStatusSpan = document.getElementById('audioStatus');
     let isSimulating = false;
-    let synth = window.speechSynthesis;
-
-    function speakText(text) {
-        if (!synth) return;
-        synth.cancel(); // interrompe qualquer fala anterior para não acumular
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'pt-BR';
-        utterance.rate = 0.9;
-        synth.speak(utterance);
-        audioStatusSpan.innerHTML = `🔊 Falando: "${text}"`;
-        setTimeout(() => {
-            if (audioStatusSpan.innerHTML.includes(text)) audioStatusSpan.innerHTML = `✅ Áudio reproduzido: ${text}`;
-        }, 1000);
-    }
 
     function resetSemaforo(keepGreen = true) {
         ledRed.classList.remove('active');
@@ -506,18 +580,16 @@ void loop() {
     async function simulatePedestrianWithAudio() {
         if (isSimulating) {
             audioStatusSpan.innerHTML = '⏳ Ciclo já em andamento, aguarde...';
+            speakText("Ciclo em andamento, aguarde.");
             return;
         }
         isSimulating = true;
-        // Início: sinal verde inicial
         resetSemaforo(true);
         audioStatusSpan.innerHTML = '🟢 Semáforo verde. Aguardando pedestre...';
         
-        // Simula detecção do pedestre: primeiro alerta sonoro (texto)
         speakText("Pedestre detectado. Atenção, mudança de sinal.");
         await delay(1200);
         
-        // Transição: 3 bips sonoros simulados (texto)
         for(let i=1; i<=3; i++) {
             speakText(`Alerta ${i}`);
             await delay(500);
@@ -526,21 +598,21 @@ void loop() {
         // Amarelo: alerta
         resetSemaforo(false);
         ledYellow.classList.add('active');
-        speakText("Amarelo: alerta. Prepare-se para parar.");
+        speakText("Amarelo: Alerta");
         audioStatusSpan.innerHTML = '🟡 Amarelo: alerta';
         await delay(2000);
         
-        // Vermelho: PARE
+        // Vermelho: Pare
         ledYellow.classList.remove('active');
         ledRed.classList.add('active');
-        speakText("Vermelho: Pare. Travessia liberada para pedestres.");
+        speakText("Vermelho: Pare");
         audioStatusSpan.innerHTML = '🔴 Vermelho: PARE - travessia segura';
         await delay(4500);
         
-        // Retorno ao verde
+        // Verde: Passa
         ledRed.classList.remove('active');
         ledGreen.classList.add('active');
-        speakText("Verde: Passa. Sinal liberado para veículos.");
+        speakText("Verde: Passa");
         audioStatusSpan.innerHTML = '🟢 Verde: Passa. Fim do ciclo.';
         await delay(1000);
         
@@ -552,13 +624,10 @@ void loop() {
         simulatePedestrianWithAudio();
     });
 
-    // Inicialização: estado verde
+    // Inicialização
     resetSemaforo(true);
-    // Garantir que a síntese de voz funcione apenas após interação do usuário (alguns navegadores exigem)
-    // O primeiro clique no botão já ativa o áudio permitido pela política do usuário.
-    
     buildGallery();
-    // Fechar modais com tecla ESC
+
     document.addEventListener('keydown', (e) => {
         if(e.key === 'Escape') {
             document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
@@ -569,4 +638,3 @@ void loop() {
 </script>
 </body>
 </html>
-```
