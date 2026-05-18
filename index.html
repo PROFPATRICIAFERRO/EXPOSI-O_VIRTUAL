@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>✨ EXPOSIÇÃO VIRTUAL | 2º Ano D - Semáforo Inteligente IR ✨</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 20% 30%, #fff2e0, #ffe1b9);
+            color: #2c2418;
+            overflow-x: hidden;
+        }
+
+        /* cabeçalho com vibe de evento */
+        .hero {
+            background: linear-gradient(125deg, #F45B3A, #FF8C42, #F9A03F);
+            color: white;
+            padding: 3rem 1.5rem 4rem;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .hero::after {
+            content: "🚦✨";
+            font-size: 160px;
+            opacity: 0.12;
+            position: absolute;
+            bottom: -20px;
+            right: 20px;
+            pointer-events: none;
+        }
+        .turma-badge {
+            background: #FFE484;
+            display: inline-block;
+            padding: 0.3rem 2rem;
+            border-radius: 60px;
+            color: #C0392B;
+            font-weight: 900;
+            font-size: 1.6rem;
+            margin: 1rem 0;
+            box-shadow: 0 6px 0 #d9772e;
+            transform: rotate(-0.5deg);
+        }
+        .hero h1 {
+            font-size: 2.9rem;
+            font-weight: 900;
+            text-shadow: 3px 3px 0 #b13e1c;
+        }
+
+        /* container principal */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        /* GALERIA INTERATIVA EXPOSIÇÃO */
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin: 2rem 0 1rem;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #C2492A, #F59E42);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            border-left: 8px solid #FF914D;
+            padding-left: 1rem;
+        }
+        .expo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .expo-card {
+            background: rgba(255, 252, 240, 0.95);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.5, 1.1);
+            box-shadow: 0 18px 28px -12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            border: 1px solid rgba(255,200,120,0.6);
+        }
+        .expo-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 28px 35px -12px #f7944a;
+            background: white;
+        }
+        .img-frame {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            background: #f0cfaa;
+            transition: 0.2s;
+        }
+        .card-info {
+            padding: 1.2rem;
+            text-align: center;
+        }
+        .card-info h3 {
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+        .modal-img {
+            max-width: 100%;
+            border-radius: 1rem;
+        }
+
+        /* spotlight produto final */
+        .spotlight {
+            background: linear-gradient(125deg, #1f3e4b, #2d6a8f);
+            border-radius: 2.8rem;
+            padding: 2rem;
+            margin: 2rem 0;
+            color: white;
+            box-shadow: 0 20px 30px -5px rgba(0,0,0,0.4);
+        }
+        .code-block {
+            background: #0a1f28;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: #deedf5;
+            border-left: 6px solid #ffbc6e;
+        }
+
+        /* cards das áreas */
+        .area-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+        .area-card {
+            background: #fffff5;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            flex: 1;
+            min-width: 200px;
+            transition: 0.2s;
+            border-bottom: 5px solid #ff914d;
+        }
+        .btn-detail {
+            background: #ff8233;
+            border: none;
+            padding: 0.5rem 1.3rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        /* simulador interativo */
+        .interactive-semaforo {
+            background: #2b2b2b;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 2rem 0;
+            color: white;
+        }
+        .leds {
+            display: flex;
+            gap: 1rem;
+            background: #222;
+            padding: 1rem;
+            border-radius: 3rem;
+        }
+        .led {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: gray;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            transition: 0.2s;
+        }
+        .led.red.active { background: #ff3b3b; box-shadow: 0 0 20px red; }
+        .led.yellow.active { background: #ffd966; box-shadow: 0 0 20px gold; }
+        .led.green.active { background: #44cc44; box-shadow: 0 0 20px #6eff6e; }
+        .simulate-btn {
+            background: #ff8c42;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 2rem;
+            font-weight: bold;
+        }
+
+        .footer {
+            background: #1f2f32;
+            color: #ffebcc;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top-left-radius: 3rem;
+            border-top-right-radius: 3rem;
+        }
+
+        /* modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: #fffcf0;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            position: relative;
+            animation: fadeUp 0.2s;
+        }
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+        @keyframes fadeUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 1.8rem; }
+            .turma-badge { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="turma-badge"><i class="fas fa-users"></i> 2º ANO D - PROJETO INTEGRADOR <i class="fas fa-microchip"></i></div>
+    <h1>🚦 SEMÁFORO INTELIGENTE COM IR 🚦</h1>
+    <p><strong>➕ Acessibilidade Visual e Auditiva | Tecnologia Assistiva</strong><br>“Ciência, tecnologia e IA transformando a mobilidade urbana”</p>
+    <div style="margin-top: 0.8rem;"><i class="fas fa-universal-access"></i> Detecção de pedestres · Sinalização sonora · Código aberto</div>
+</div>
+
+<div class="container">
+    <!-- GALERIA DAS 5 IMAGENS REAIS (imag1.jpeg ... IMAG5.png) -->
+    <div class="gallery-header">
+        <div class="section-title"><i class="fas fa-images"></i> Processo de construção – Clique para ampliar</div>
+        <span style="background: #ffe2b3; padding: 0.3rem 1rem; border-radius: 30px;"><i class="fas fa-hand-pointer"></i> Exposição interativa</span>
+    </div>
+    <div class="expo-grid" id="galleryGrid">
+        <!-- as imagens serão inseridas via js com os nomes exatos, mas já estruturadas -->
+    </div>
+
+    <!-- PRODUTO FINAL - SEMÁFORO + CÓDIGO -->
+    <div class="spotlight">
+        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <i class="fas fa-microchip" style="font-size: 2.8rem;"></i>
+            <h2 style="font-size: 2rem;">⭐ Protótipo Final: Semáforo com IR e Buzzer ⭐</h2>
+        </div>
+        <p>Circuito inteligente desenvolvido pela turma que detecta pedestres por sensor infravermelho, aciona alerta sonoro e sincroniza LEDs para travessia segura, garantindo acessibilidade para pessoas com deficiência visual e baixa visão.</p>
+        <div class="code-block">
+            <i class="fas fa-code"></i> <strong>Código Arduino – Semáforo Acessível 2º D</strong>
+            <pre>
+// Pinos do projeto
+int vermelho = 10;
+int amarelo = 9;
+int verde = 8;
+int sensorIR = 7;
+int buzzer = 6;
+
+void setup() {
+  pinMode(vermelho, OUTPUT);
+  pinMode(amarelo, OUTPUT);
+  pinMode(verde, OUTPUT);
+  pinMode(sensorIR, INPUT);
+  pinMode(buzzer, OUTPUT);
+  digitalWrite(verde, HIGH); // sinal inicial verde
+}
+
+void loop() {
+  if(digitalRead(sensorIR) == HIGH) {   // pedestre detectado
+    for(int i=0;i<3;i++) { tone(buzzer,1000); delay(200); noTone(buzzer); delay(150); }
+    digitalWrite(verde, LOW);
+    digitalWrite(amarelo, HIGH);
+    delay(2000);
+    digitalWrite(amarelo, LOW);
+    digitalWrite(vermelho, HIGH);
+    tone(buzzer, 1500);
+    delay(5000);   // tempo de travessia
+    noTone(buzzer);
+    digitalWrite(vermelho, LOW);
+    digitalWrite(verde, HIGH);
+  }
+  delay(50);
+}
+            </pre>
+        </div>
+        <p><i class="fas fa-ear-listen"></i> <strong>Inclusão garantida:</strong> O buzzer emite padrões sonoros distintos – aviso rápido e sinal contínuo durante a travessia – guiando pessoas com deficiência visual de forma autônoma.</p>
+    </div>
+
+    <!-- ÁREAS DO CONHECIMENTO -->
+    <div class="section-title"><i class="fas fa-flask"></i> Integração interdisciplinar</div>
+    <div class="area-container">
+        <div class="area-card"><i class="fas fa-atom fa-2x"></i> <h3>Física</h3> <p>Movimento, velocidade média, estudo de rampas acessíveis e máquinas simples (alavancas) aplicadas ao esporte paralímpico.</p><button class="btn-detail" onclick="openModal('fisicaModal')">Explorar</button></div>
+        <div class="area-card"><i class="fas fa-laptop-code fa-2x"></i> <h3>Programação & IA</h3> <p>Lógica do semáforo, engenharia de prompt para gerar código otimizado, análise de dados de mobilidade com Google Planilhas.</p><button class="btn-detail" onclick="openModal('progModal')">Ver + IA</button></div>
+        <div class="area-card"><i class="fas fa-microchip fa-2x"></i> <h3>Robótica</h3> <p>Montagem do sensor IR, LEDs e buzzer; prototipagem e calibração. Tecnologia assistiva para cidades inclusivas.</p><button class="btn-detail" onclick="openModal('robotModal')">Circuito</button></div>
+    </div>
+
+    <!-- SIMULADOR INTERATIVO DO SEMÁFORO (diversão + aprendizado) -->
+    <div class="interactive-semaforo">
+        <div>
+            <h3><i class="fas fa-gamepad"></i> Simule o Semáforo Inteligente</h3>
+            <p>Clique em "Detectar pedestre" e veja o ciclo acessível</p>
+            <button class="simulate-btn" id="simularBtn"><i class="fas fa-person-walking"></i> Detectar pedestre (IR)</button>
+        </div>
+        <div class="leds">
+            <div class="led red" id="ledRed"></div>
+            <div class="led yellow" id="ledYellow"></div>
+            <div class="led green" id="ledGreen"></div>
+        </div>
+        <div><i class="fas fa-volume-up"></i> <span id="somStatus">🔇 Aguardando...</span></div>
+    </div>
+
+    <!-- Âncora e reflexão final -->
+    <div style="background: #FFEBD6; border-radius: 2rem; padding: 1.5rem; margin: 2rem 0; border-left: 12px solid #f97e2e;">
+        <i class="fas fa-play-circle" style="font-size: 2rem; color: #e56e1a;"></i> 
+        <strong>Âncora do projeto:</strong> Vídeo "Basquete em cadeira de rodas – superação e inclusão"<br>
+        <strong>Questão motriz:</strong> “Como a ciência, tecnologia e IA contribuem para a melhoria da mobilidade?”<br>
+        O <strong>Semáforo com IR</strong> é a resposta inovadora da Turma 2º Ano D, conectando eletrônica, programação e acessibilidade.
+    </div>
+</div>
+
+<!-- MODAIS -->
+<div id="fisicaModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('fisicaModal')">&times;</span>
+        <h3><i class="fas fa-atom"></i> Física em ação</h3>
+        <ul><li>Análise de tempos de travessia para pedestres e cadeirantes.</li><li>Máquinas simples no basquete paralímpico: alavancas.</li><li>Reflexão da luz infravermelha – princípio do sensor.</li></ul>
+        <p><strong>Experimentação:</strong> simulação de rampas e cálculo de velocidade média no trajeto escolar.</p>
+    </div>
+</div>
+<div id="progModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('progModal')">&times;</span>
+        <h3><i class="fas fa-code"></i> Programação + IA</h3>
+        <ul><li>Código colaborativo no Arduino IDE.</li><li>Uso de IA generativa (Gemini) para revisar e comentar o sistema.</li><li>Dashboard de dados sobre acessibilidade nas calçadas.</li></ul>
+        <p><strong>Engenharia de prompt:</strong> estudantes criaram prompts para otimizar temporização e gerar versões alternativas.</p>
+    </div>
+</div>
+<div id="robotModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('robotModal')">&times;</span>
+        <h3><i class="fas fa-microchip"></i> Robótica – Esquema elétrico</h3>
+        <p><strong>Componentes:</strong> Arduino UNO, sensor IR FC-51, LEDs (V/Az/Am), resistor 220Ω, buzzer, protoboard.</p>
+        <p><strong>Conexões:</strong> Sensor IR no pino 7, LED verde pino 8, amarelo pino 9, vermelho pino 10, buzzer pino 6. GND comum.</p>
+        <p>Os alunos documentaram cada etapa da montagem nas imagens 1,2,3,4 e 5.</p>
+    </div>
+</div>
+
+<div class="footer">
+    <i class="fas fa-chalkboard-user"></i> Exposição Virtual – Turma 2º Ano D | Projeto Integrador: Inteligência Artificial e Tecnologias<br>
+    Secretaria de Estado da Educação do Paraná | Metodologia ABP (Aprendizagem Baseada em Projetos)<br>
+    🚦 Inovação, inclusão e tecnologia assistiva pela mobilidade urbana.
+</div>
+
+<script>
+    // Nomes exatos das imagens fornecidas
+    const imagens = [
+        { src: "imag1.jpeg", title: "🔧 Conceito 1 – Esquema elétrico", desc: "Primeiras conexões do sensor IR, LEDs e Arduino." },
+        { src: "imag2.jpeg", title: "🔌 Conceito 2 – Montagem inicial", desc: "Protoboard, jumpers e ajustes do circuito." },
+        { src: "imag3.jpeg", title: "📡 Conceito 3 – Sensor IR + LEDs", desc: "Testes de detecção e lógica de pedestre." },
+        { src: "imag4.png", title: "👩‍💻 Alunos programando", desc: "Equipe 2º D codificando no Arduino IDE com apoio de IA." },
+        { src: "IMAG5.png", title: "✅ Semáforo Final", desc: "Protótipo funcional com buzzer e semáforo acessível." }
+    ];
+
+    const galleryGrid = document.getElementById('galleryGrid');
+    function buildGallery() {
+        galleryGrid.innerHTML = '';
+        imagens.forEach((img, idx) => {
+            const card = document.createElement('div');
+            card.className = 'expo-card';
+            card.onclick = () => openImageModal(img.src, img.title);
+            card.innerHTML = `
+                <img class="img-frame" src="${img.src}" alt="${img.title}" onerror="this.src='https://placehold.co/400x300?text=Imagem+${idx+1}+(aguarde)'; this.style.background='#ffd6a5';">
+                <div class="card-info">
+                    <h3>${img.title}</h3>
+                    <p>${img.desc}</p>
+                    <small><i class="fas fa-search-plus"></i> Clique para ampliar</small>
+                </div>
+            `;
+            galleryGrid.appendChild(card);
+        });
+    }
+
+    // Modal de imagem ampliada
+    const imageModal = document.createElement('div');
+    imageModal.className = 'modal';
+    imageModal.id = 'imageModal';
+    imageModal.innerHTML = `
+        <div class="modal-content" style="max-width: 700px; text-align:center;">
+            <span class="close-modal" id="closeImageModalBtn">&times;</span>
+            <img id="modalImagePreview" style="width:100%; border-radius:1rem;" src="">
+            <h3 id="modalImageTitle" style="margin-top:0.8rem;"></h3>
+        </div>
+    `;
+    document.body.appendChild(imageModal);
+    function openImageModal(src, title) {
+        const modalImg = document.getElementById('modalImagePreview');
+        const modalTitle = document.getElementById('modalImageTitle');
+        modalImg.src = src;
+        modalTitle.innerText = title;
+        imageModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        // se a imagem falhar, manter placeholder apenas visual
+        modalImg.onerror = () => { modalImg.src = 'https://placehold.co/600x400?text=Imagem+carregamento'; };
+    }
+    document.getElementById('closeImageModalBtn')?.addEventListener('click', () => {
+        imageModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+    window.onclick = function(e) {
+        if (e.target === imageModal) {
+            imageModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        if (e.target.classList && e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Funções modais dos cards disciplinares
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // --- SIMULADOR INTERATIVO SEMÁFORO ---
+    const ledRed = document.getElementById('ledRed');
+    const ledYellow = document.getElementById('ledYellow');
+    const ledGreen = document.getElementById('ledGreen');
+    const somSpan = document.getElementById('somStatus');
+    let isSimulating = false;
+
+    function resetSemaforo(keepGreen = true) {
+        ledRed.classList.remove('active');
+        ledYellow.classList.remove('active');
+        ledGreen.classList.remove('active');
+        if (keepGreen) ledGreen.classList.add('active');
+    }
+
+    async function simulatePedestrian() {
+        if (isSimulating) return;
+        isSimulating = true;
+        // estado inicial verde
+        resetSemaforo(true);
+        somSpan.innerHTML = '🔊 Alerta: pedestre detectado!';
+        // bip bip bip
+        for(let i=0;i<3;i++) {
+            somSpan.innerHTML = `⚠️ BIP ${i+1} ⚠️`;
+            await delay(300);
+            somSpan.innerHTML = `🔊 Alerta sonoro`;
+            await delay(200);
+        }
+        // amarelo
+        resetSemaforo(false);
+        ledYellow.classList.add('active');
+        somSpan.innerHTML = '🟡 Atenção: sinal amarelo';
+        await delay(1800);
+        // vermelho + som contínuo
+        ledYellow.classList.remove('active');
+        ledRed.classList.add('active');
+        somSpan.innerHTML = '🔴 Sinal vermelho – travessia liberada (som contínuo)';
+        await delay(4000);
+        // fim travessia, volta verde
+        ledRed.classList.remove('active');
+        ledGreen.classList.add('active');
+        somSpan.innerHTML = '🟢 Sinal verde – aguarde próximo pedestre';
+        await delay(500);
+        isSimulating = false;
+        somSpan.innerHTML = '✅ Semáforo pronto. Pressione "Detectar pedestre" novamente';
+    }
+
+    function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    document.getElementById('simularBtn').addEventListener('click', () => {
+        if(!isSimulating) simulatePedestrian();
+        else somSpan.innerHTML = '⏳ Já existe um ciclo em andamento...';
+    });
+
+    // inicializa galeria com imagens
+    buildGallery();
+
+    // Fechar modais globais com ESC
+    document.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape') {
+            document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Inicializar semáforo com verde
+    resetSemaforo(true);
+    somSpan.innerHTML = '🟢 Simulação pronta. Clique em "Detectar pedestre"';
+</script>
+</body>
+</html>
